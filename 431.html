@@ -1,0 +1,61 @@
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/mustache.js/2.3.0/mustache.min.js"></script>
+	<script type="text/template" id="template">
+		<div class="card">
+			<h1>Question:{{Qu}}</h1>
+			<p>1: {{C1}}</p>
+			<p>2: {{C2}}</p>
+			<p>3: {{C3}}</p>
+			<p>4: {{C4}}</p>
+			<input type="text" id="{{id}}" placeholder="">
+		</div>
+	</script>
+	<script>
+	var data;
+	function loadJSON(){
+		$.getJSON("https://online-31678.firebaseio.com/.json",function(results){
+			data=results;
+			displayData();
+		})
+	}
+	function displayData(){
+		var build="";
+
+		var output=document.getElementById("output");
+		var template=document.getElementById("template").innerHTML;
+		for(var key in data.Quiz1){
+			build+=Mustache.render(template,data.Quiz1[key]);
+			
+		}
+		output.innerHTML=build;
+	}
+
+	function grade(){
+		var answerkey="";
+		var answer="";
+		var sum=0;
+		var build="";
+		var avg=0;
+		for(var key in data.Quiz1){
+			answer=document.getElementById(key).value;
+			answerkey=data.Quiz1[key].A;
+			if(answer==answerkey){
+				sum+=1
+				avg =(sum/3)*100
+				console.log("question:" + key + "is right");
+			}else{
+				
+				console.log("question:" + key + "is wrong");
+				}
+		
+		}
+		document.write("your score is: " + avg);
+		output.inner.HTML=build;
+	}
+	</script>
+	<body onload="loadJSON()"></body>
+		<div id="output"></div>
+		<button onclick="grade()">Coniform answer</button>
+
+	</body>
+</html>
